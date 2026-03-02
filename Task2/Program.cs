@@ -189,6 +189,8 @@ namespace Task2
             // НАЧАЛО взаимодействия с пользователем
             Console.WriteLine("а) " + OutMsgforA);
             Console.WriteLine("б) " + OutMsgforB);
+            // КОНЕЦ взаимодействия с пользователем
+
         }
     }
 }
