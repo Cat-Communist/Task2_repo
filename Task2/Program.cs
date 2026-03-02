@@ -5,62 +5,6 @@ using System.Windows.Markup;
 
 namespace Task2
 {
-    public class Monetary
-    {
-        protected double dep_value;
-        public void setValueFromLine()
-        {
-            try
-            {
-                // берём только 2 цифры после запятой
-                double input = double.Parse(Console.ReadLine());
-                this.dep_value = Math.Truncate(input * 100) / 100;
-                if (this.dep_value <= 0)
-                {
-                    this.dep_value = 0;
-                    throw new ArgumentOutOfRangeException();
-                }
-            }
-            catch (FormatException e)
-            {
-                Console.WriteLine(e.Message);
-            }
-            catch (ArgumentOutOfRangeException e)
-            {
-                Console.WriteLine(e.Message);
-            }
-        }
-        public double getValue()
-        {
-            return this.dep_value;
-        }
-    }
-
-    public class Deposit : Monetary
-    {
-        public Deposit() { }
-        public Deposit(double value)
-        {
-            this.dep_value = value;
-        }
-
-        public void setValueFromLine(double value)
-        {
-            try
-            {
-                setValueFromLine();
-            }
-            catch (FormatException e)
-            {
-                Console.WriteLine(e.Message);
-            }
-            catch (ArgumentOutOfRangeException e)
-            {
-                Console.WriteLine(e.Message);
-            }
-        }
-    }
-
     public class Logic
     {
         private static DateOnly start_date = new DateOnly(2026, 3, 1);
