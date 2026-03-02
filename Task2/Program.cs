@@ -8,23 +8,28 @@ namespace Task2
     public class Logic
     {
         private static DateOnly start_date = new DateOnly(2026, 3, 1);
-        public static string incrGreater(double dep, double fin_incr)
+
+        public static string CalcIncrement(double dep, double fin_incr)
         {
-            for (int i = 0; ; i++)
+            for (var i = 0; ; i++)
             {
-                double curr_incr = dep * 0.02;
-                dep *= 1.02;
+                var curr_incr = Math.Round(dep * 0.02, 2);
+                dep += curr_incr;
                 if (curr_incr > fin_incr)
-                    return start_date.AddMonths(i).ToString("MMMMMMMMMMM");
+                    return start_date.AddMonths(i).ToString("MMMM");
             }
         }
-        public static int depGreater(double start_dep, double final_dep)
+        
+        public static int CalcDeposit(double startDeposit, double finalDeposit)
         {
-            double dep = start_dep;
-            for (int i = 0; ; i++)
+            if (startDeposit > finalDeposit)
+                return 0;
+
+            var currDeposit = startDeposit;
+            for (var i = 1; ; i++)
             {
-                dep *= 1.02;
-                if (dep > final_dep)
+                currDeposit = Math.Round(currDeposit * 1.02, 2);
+                if (currDeposit > finalDeposit)
                     return i;
             }
         }
@@ -46,19 +51,19 @@ namespace Task2
                 "б) через сколько месяцев размер вклада превысит C руб");
             Console.WriteLine("Введите сумму вклада. Пример: 12000,34");
 
-            double start_deposit = 0; // Начальный вклад
+            var start_deposit = 0d; // Начальный вклад
             do
             {
                 Console.Write("Вклад: ");
                 try
                 {
                     // берём только 2 цифры после запятой
-                    double input = double.Parse(Console.ReadLine());
+                    var input = double.Parse(Console.ReadLine());
                     start_deposit = Math.Truncate(input * 100) / 100;
                     if (start_deposit <= 0)
                     {
                         start_deposit = 0;
-                        throw new ArgumentOutOfRangeException();
+                        throw new ArgumentOutOfRangeException(nameof(start_deposit));
                     }
                 }
                 catch (FormatException e)
@@ -72,19 +77,19 @@ namespace Task2
 
             } while (start_deposit == 0);
 
-            double final_increment = 0; // Увеличение суммы вклада
+            var final_increment = 0d; // Увеличение суммы вклада
             do
             {
                 Console.Write("Ежемесячное увеличение вклада, для которого ищем месяц: ");
                 try
                 {
                     // берём только 2 цифры после запятой
-                    double input = double.Parse(Console.ReadLine());
+                    var input = double.Parse(Console.ReadLine());
                     final_increment = Math.Truncate(input * 100) / 100;
                     if (final_increment <= 0)
                     {
                         final_increment = 0;
-                        throw new ArgumentOutOfRangeException();
+                        throw new ArgumentOutOfRangeException(nameof(final_increment));
                     }
                 }
                 catch (FormatException e)
@@ -97,20 +102,20 @@ namespace Task2
                 }
 
             } while (final_increment == 0);
-
-            double final_deposit = 0; // Конечная сумма вклада
+            
+            var final_deposit = 0d; // Конечная сумма вклада
             do
             {
                 Console.Write("Конечная сумма вклада: ");
                 try
                 {
                     // берём только 2 цифры после запятой
-                    double input = double.Parse(Console.ReadLine());
+                    var input = double.Parse(Console.ReadLine());
                     final_deposit = Math.Truncate(input * 100) / 100;
                     if (final_deposit <= 0)
                     {
                         final_deposit = 0;
-                        throw new ArgumentOutOfRangeException();
+                        throw new ArgumentOutOfRangeException(nameof(final_deposit));
                     }
                 }
                 catch (FormatException e)
@@ -126,15 +131,14 @@ namespace Task2
             // КОНЕЦ взаимодействия с пользователем
 
             // НАЧАЛО логики
-            string OutMsgforA = Logic.incrGreater(start_deposit, final_increment);
-            string OutMsgforB = Logic.depGreater(start_deposit, final_deposit).ToString();
+            var OutMsgforA = Logic.CalcIncrement(start_deposit, final_increment);
+            var OutMsgforB = Logic.CalcDeposit(start_deposit, final_deposit).ToString();
             // КОНЕЦ логики
 
             // НАЧАЛО взаимодействия с пользователем
             Console.WriteLine("а) " + OutMsgforA);
             Console.WriteLine("б) " + OutMsgforB);
             // КОНЕЦ взаимодействия с пользователем
-
         }
     }
 }
