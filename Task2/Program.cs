@@ -1,4 +1,6 @@
-﻿using System.Reflection.Metadata;
+﻿using System.Diagnostics;
+using System.Dynamic;
+using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Windows.Markup;
@@ -8,6 +10,34 @@ namespace Task2
     public class Logic
     {
         private static DateOnly start_date = new DateOnly(2026, 3, 1);
+
+        public static double ReadMoney()
+        {
+            var result = 0d;
+            do
+            {
+                try
+                {
+                    // берём только 2 цифры после запятой
+                    var input = double.Parse(Console.ReadLine());
+                    result = Math.Truncate(input * 100) / 100;
+                    if (result <= 0)
+                    {
+                        result = 0;
+                        throw new ArgumentOutOfRangeException(nameof(result));
+                    }
+                }
+                catch (FormatException e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+                catch (ArgumentOutOfRangeException e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            } while (result == 0);
+            return result;
+        }
 
         public static string CalcIncrement(double dep, double fin_incr)
         {
@@ -19,7 +49,7 @@ namespace Task2
                     return start_date.AddMonths(i).ToString("MMMM");
             }
         }
-        
+
         public static int CalcDeposit(double startDeposit, double finalDeposit)
         {
             if (startDeposit > finalDeposit)
@@ -51,83 +81,14 @@ namespace Task2
                 "б) через сколько месяцев размер вклада превысит C руб");
             Console.WriteLine("Введите сумму вклада. Пример: 12000,34");
 
-            var start_deposit = 0d; // Начальный вклад
-            do
-            {
-                Console.Write("Вклад: ");
-                try
-                {
-                    // берём только 2 цифры после запятой
-                    var input = double.Parse(Console.ReadLine());
-                    start_deposit = Math.Truncate(input * 100) / 100;
-                    if (start_deposit <= 0)
-                    {
-                        start_deposit = 0;
-                        throw new ArgumentOutOfRangeException(nameof(start_deposit));
-                    }
-                }
-                catch (FormatException e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-                catch (ArgumentOutOfRangeException e)
-                {
-                    Console.WriteLine(e.Message);
-                }
+            Console.Write("Вклад: ");
+            var start_deposit = Logic.ReadMoney();
 
-            } while (start_deposit == 0);
+            Console.Write("Ежемесячное увеличение вклада, для которого считаем месяц: ");
+            var final_increment = Logic.ReadMoney();
 
-            var final_increment = 0d; // Увеличение суммы вклада
-            do
-            {
-                Console.Write("Ежемесячное увеличение вклада, для которого ищем месяц: ");
-                try
-                {
-                    // берём только 2 цифры после запятой
-                    var input = double.Parse(Console.ReadLine());
-                    final_increment = Math.Truncate(input * 100) / 100;
-                    if (final_increment <= 0)
-                    {
-                        final_increment = 0;
-                        throw new ArgumentOutOfRangeException(nameof(final_increment));
-                    }
-                }
-                catch (FormatException e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-                catch (ArgumentOutOfRangeException e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-
-            } while (final_increment == 0);
-            
-            var final_deposit = 0d; // Конечная сумма вклада
-            do
-            {
-                Console.Write("Конечная сумма вклада: ");
-                try
-                {
-                    // берём только 2 цифры после запятой
-                    var input = double.Parse(Console.ReadLine());
-                    final_deposit = Math.Truncate(input * 100) / 100;
-                    if (final_deposit <= 0)
-                    {
-                        final_deposit = 0;
-                        throw new ArgumentOutOfRangeException(nameof(final_deposit));
-                    }
-                }
-                catch (FormatException e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-                catch (ArgumentOutOfRangeException e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-
-            } while (final_deposit == 0);
+            Console.Write("Конечное значение вклада, для которого вычисляем месяц: ");
+            var final_deposit = Logic.ReadMoney();
             // КОНЕЦ взаимодействия с пользователем
 
             // НАЧАЛО логики
